@@ -14,6 +14,7 @@ export PROJECT_HELP_MSG
 DATA_DIR:=/mnt/imagenet
 PWD:=$(shell pwd)
 numproc:=2
+model:=resnet101
 
 setup_volumes:=-v $(PWD)/src/execution:/mnt/script \
 	-v $(DATA_DIR):/mnt/input \
@@ -36,7 +37,7 @@ define execute_mpi
  			   -map-by slot -x NCCL_DEBUG=INFO \
  			   -x LD_LIBRARY_PATH -x PATH \
  			    -mca pml ob1 -mca btl ^openib \
- 			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model resnet101 --batch_size 64 --variable_update horovod"
+ 			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --variable_update horovod"
 endef
 
 #mpirun -np 16 \
