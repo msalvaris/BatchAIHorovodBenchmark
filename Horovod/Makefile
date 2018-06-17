@@ -13,7 +13,7 @@ export PROJECT_HELP_MSG
 
 DATA_DIR:=/mnt/imagenet
 PWD:=$(shell pwd)
-FAKE:='False'
+numproc:=2
 
 setup_volumes:=-v $(PWD)/src/execution:/mnt/script \
 	-v $(DATA_DIR):/mnt/input \
@@ -32,7 +32,7 @@ tag:=9-1.8-.13.2 # Cuda - TF version - Horovod version
 define execute_mpi
  nvidia-docker run -it \
  --privileged \
- $(1) bash -c "mpirun -np 2 -H localhost:2 -bind-to none \
+ $(1) bash -c "mpirun -np $(numproc) -H localhost:$(numproc) -bind-to none \
  			   -map-by slot -x NCCL_DEBUG=INFO \
  			   -x LD_LIBRARY_PATH -x PATH \
  			    -mca pml ob1 -mca btl ^openib \
