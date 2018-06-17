@@ -31,8 +31,6 @@ tag:=9-1.8-.13.2 # Cuda - TF version - Horovod version
 
 define execute_mpi
  nvidia-docker run -it \
- $(setup_volumes) \
- $(setup_environment) \
  --privileged \
  $(1) bash -c "mpirun -np 2 -H localhost:2 -bind-to none \
  			   -map-by slot -x NCCL_DEBUG=INFO \
