@@ -27,7 +27,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libjpeg-dev \
         libpng-dev \
         python${PYTHON_VERSION} \
-        python${PYTHON_VERSION}-dev
+        python${PYTHON_VERSION}-dev \
+        net-tools
 
 RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
