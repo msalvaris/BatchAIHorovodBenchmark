@@ -16,6 +16,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
+        cpio \
         git \
         curl \
         vim \
