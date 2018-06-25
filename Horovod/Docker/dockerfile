@@ -31,7 +31,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libibverbs* \
         ibverbs-utils\
         ibutils \
-        net-tools
+        net-tools \
+        debhelper \
+        autotools-dev \
+        dkms
+
 
 RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
