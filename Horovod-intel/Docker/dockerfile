@@ -39,6 +39,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python$PYTHON_VERSION-dev
 
 
+# install intel MPI
+RUN cd /tmp && \
+    wget -q 'http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz' && \
+    tar zxvf l_mpi_2017.3.196.tgz && \
+    sed -i -e 's/^ACCEPT_EULA=decline/ACCEPT_EULA=accept/g' /tmp/l_mpi_2017.3.196/silent.cfg && \
+    sed -i -e 's|^#ACTIVATION_LICENSE_FILE=|ACTIVATION_LICENSE_FILE=/tmp/l_mpi_2017.3.196/USE_SERVER.lic|g' \
+    			/tmp/l_mpi_2017.3.196/silent.cfg && \
+    sed -i -e 's/^ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=license_server/g' /tmp/l_mpi_2017.3.196/silent.cfg && \
+    cd /tmp/l_mpi_2017.3.196 && \
+    ./install.sh -s silent.cfg && \
+    cd .. && \
+    rm -rf l_mpi_2017.3.196* && \
+    echo "source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh" >> ~/.bashrc
+
+ENV PATH $PATH:/opt/intel/compilers_and_libraries/linux/mpi/bin64
 
 RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
@@ -58,24 +73,6 @@ RUN PY=$(echo ${PYTHON_VERSION} | sed s/\\.//); \
     fi; \
     pip install torchvision
 
-
-# install intel MPI
-RUN cd /tmp && \
-    wget -q 'http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz' && \
-    tar zxvf l_mpi_2017.3.196.tgz && \
-    sed -i -e 's/^ACCEPT_EULA=decline/ACCEPT_EULA=accept/g' /tmp/l_mpi_2017.3.196/silent.cfg && \
-    sed -i -e 's|^#ACTIVATION_LICENSE_FILE=|ACTIVATION_LICENSE_FILE=/tmp/l_mpi_2017.3.196/USE_SERVER.lic|g' \
-    			/tmp/l_mpi_2017.3.196/silent.cfg && \
-    sed -i -e 's/^ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=license_server/g' /tmp/l_mpi_2017.3.196/silent.cfg && \
-    cd /tmp/l_mpi_2017.3.196 && \
-    ./install.sh -s silent.cfg && \
-    cd .. && \
-    rm -rf l_mpi_2017.3.196* && \
-    echo "source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh" >> ~/.bashrc
-
-ENV PATH $PATH:/opt/intel/compilers_and_libraries/linux/mpi/bin64
-
-RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
 
 # Install Dependencies
 RUN pip install --no-cache-dir h5py scipy jupyter ipykernel numpy toolz pandas \
