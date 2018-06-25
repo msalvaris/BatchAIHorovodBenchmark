@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         vim \
         wget \
         ca-certificates \
+        libdapl2 \
         libcudnn7=${CUDNN_VERSION} \
         libnccl2=${NCCL_VERSION} \
         libnccl-dev=${NCCL_VERSION} \
@@ -75,9 +76,9 @@ ENV PATH $PATH:/opt/intel/compilers_and_libraries/linux/mpi/bin64
 
 RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
 
-# Install TensorFlow and Keras
-RUN pip install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION h5py scipy jupyter ipykernel numpy toolz pandas \
- 	scikit-learn keras pillow
+# Install Dependencies
+RUN pip install --no-cache-dir h5py scipy jupyter ipykernel numpy toolz pandas \
+ 	scikit-learn pillow
 
 # Install Horovod, temporarily using CUDA stubs
 RUN ldconfig /usr/local/cuda-9.0/targets/x86_64-linux/lib/stubs && \
