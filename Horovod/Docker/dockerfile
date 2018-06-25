@@ -39,6 +39,13 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
 
+RUN cd /tmp && \
+	wget http://www.mellanox.com/downloads/ofed/nvidia-peer-memory_1.0-7.tar.gz && \
+	tar xzf nvidia-peer-memory_1.0-7.tar.gz && \
+	cd nvidia-peer-memory_1.0-7 && \
+	dpkg-buildpackage -us -uc && \
+	dpkg -i nv-peer-memory_1.0-7_all.deb
+
 # Install TensorFlow and Keras
 RUN pip install tensorflow-gpu==${TENSORFLOW_VERSION} keras h5py
 
