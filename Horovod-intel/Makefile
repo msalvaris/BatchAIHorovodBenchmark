@@ -33,8 +33,8 @@ tag:=9-1.8-.13.2 # Cuda - TF version - Horovod version
 define execute_mpi
  nvidia-docker run -it \
  --privileged \
- $(1) bash -c "mpirun -n 2 -host localhost -ppn 2 -env NCCL_DEBUG=INFO -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 -env I_MPI_DYNAMIC_CONNECTION=0 \
- 			   -env LD_LIBRARY_PATH -env PATH \
+ $(1) bash -c "mpirun -n $(numproc) -host localhost -ppn $(numproc) -env NCCL_DEBUG=INFO -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 -env I_MPI_DYNAMIC_CONNECTION=0 \
+ 			   -envlist LD_LIBRARY_PATH,PATH \
  			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --variable_update horovod"
 endef
 
