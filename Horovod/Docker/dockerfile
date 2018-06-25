@@ -31,24 +31,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libibverbs* \
         ibverbs-utils\
         ibutils \
-        net-tools \
-        debhelper \
-        autotools-dev \
-        dkms
+        net-tools
 
+# Download and install Mellanox OFED 4.2.1
+RUN wget http://content.mellanox.com/ofed/MLNX_OFED_LINUX-4.2-1.0.0.0/MLNX_OFED_LINUX-4.2-1.0.0.0-ubuntu16.04-x86_64.tgz && \
+        tar -xzvf MLNX_OFED_LINUX-4.1-1.0.0.0-ubuntu16.04-x86_64.tgz && \
+        MLNX_OFED_LINUX-4.2-1.0.0.0-ubuntu16.04-x86_64/mlnxofedinstall --user-space-only --without-fw-update --all -q && \
+        cd .. && \
+        rm -rf MLNX_OFED_LINUX-4.2-1.0.0.0-ubuntu16.04-x86_64 && \
+        rm -rf *.tgz
 
 RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
-
-RUN cd /tmp && \
-	wget http://www.mellanox.com/downloads/ofed/nvidia-peer-memory_1.0-7.tar.gz && \
-	tar xzvf nvidia-peer-memory_1.0-7.tar.gz && \
-	cd nvidia-peer-memory-1.0 && \
-	dpkg-buildpackage -us -uc && \
-	dpkg -i nv-peer-memory_1.0-7_all.deb
 
 # Install TensorFlow and Keras
 RUN pip install tensorflow-gpu==${TENSORFLOW_VERSION} keras h5py
