@@ -16,25 +16,30 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
-        cpio \
         git \
         curl \
         vim \
         wget \
         ca-certificates \
-        libdapl2 \
         libcudnn7=${CUDNN_VERSION} \
         libjpeg-dev \
         libpng-dev \
-        libibverbs* \
-        ibverbs-utils\
-        ibutils \
         net-tools \
-        libmlx4-1 \
         libsm6 \
         libxext6 \
         python$PYTHON_VERSION \
-        python$PYTHON_VERSION-dev
+        python$PYTHON_VERSION-dev \
+        # Infiniband/RDMA
+        cpio \
+        libmlx4-1 \
+        libmlx5-1 \
+        librdmacm1 \
+        libibverbs1 \
+        libmthca1 \
+        libdapl2 \
+		dapl2-utils \
+        ibverbs-utils\
+        ibutils
 
 
 # install intel MPI
