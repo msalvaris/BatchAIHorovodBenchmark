@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
         ca-certificates \
         libcudnn7=${CUDNN_VERSION} \
-        #libnccl2=${NCCL_VERSION} \
-        #libnccl-dev=${NCCL_VERSION} \
+        libnccl2=${NCCL_VERSION} \
+        libnccl-dev=${NCCL_VERSION} \
         libjpeg-dev \
         libpng-dev \
         net-tools \
