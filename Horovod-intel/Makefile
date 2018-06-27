@@ -54,7 +54,7 @@ run-mpi:
 	$(call execute_mpi, $(name_prefix)/horovod-batchai-bench-intel:$(tag))
 
 run:
-	$(call execute, $(name_prefix)/horovod-batchai-bench:$(tag))
+	$(call execute, $(name_prefix)/horovod-batchai-bench-intel:$(tag))
 
 push:
 	docker push $(name_prefix)/horovod-batchai-bench-intel:$(tag)
