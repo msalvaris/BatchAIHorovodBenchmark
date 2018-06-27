@@ -36,6 +36,7 @@ define execute_mpi
  $(1) bash -c "mpirun -n $(numproc) -host localhost -ppn $(numproc) -env NCCL_DEBUG=INFO \
  			   -env NCCL_IB_DISABLE=1 \
  			   -envlist LD_LIBRARY_PATH,PATH \
+ 			   -env I_MPI_HYDRA_DEBUG=on \
  			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --variable_update horovod"
 endef
 
