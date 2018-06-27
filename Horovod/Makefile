@@ -40,26 +40,11 @@ define execute_mpi
  			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --variable_update horovod"
 endef
 
-#mpirun -np 16 \
-#    -H server1:4,server2:4,server3:4,server4:4 \
-#    -bind-to none -map-by slot \
-#    -x NCCL_DEBUG=INFO -x LD_LIBRARY_PATH -x PATH \
-#    -mca pml ob1 -mca btl ^openib \
-#    \
-#    python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py \
-#        --model resnet101 \
-#        --batch_size 64 \
-#        --variable_update horovod
-
-#define execute_mpi_intel
-# nvidia-docker run -it \
-# $(setup_volumes) \
-# $(setup_environment) \
-# --env DISTRIBUTED='True' \
-# --env FAKE=$(FAKE) \
-# --privileged \
-# $(1) bash -c " source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; mpirun -n 2 -host localhost -ppn 2 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 -env I_MPI_DYNAMIC_CONNECTION=0 python /mnt/script/ImagenetKerasHorovod.py"
-#endef
+define execute
+ nvidia-docker run -it \
+ --privileged \
+ $(1) bash -c "python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64"
+endef
 
 help:
 	echo "$$PROJECT_HELP_MSG" | less
@@ -70,6 +55,8 @@ build:
 run-mpi:
 	$(call execute_mpi, $(name_prefix)/horovod-batchai-bench:$(tag))
 
+run:
+	$(call execute, $(name_prefix)/horovod-batchai-bench:$(tag))
 
 push:
 	docker push $(name_prefix)/horovod-batchai-bench:$(tag)
