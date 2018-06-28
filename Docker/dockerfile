@@ -20,3 +20,13 @@ RUN curl -o ~/miniconda.sh -O  https://repo.continuum.io/miniconda/Miniconda3-la
      /opt/conda/bin/conda env create -q --name $ENV_NAME -f environment.yml && \
      /opt/conda/bin/conda clean -ya
 ENV PATH /opt/conda/envs/$ENV_NAME/bin:/opt/conda/bin:$PATH
+
+
+# Install Azure CLI
+RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ xenial main" | \
+    sudo tee /etc/apt/sources.list.d/azure-cli.list && \
+    curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - && \
+    sudo apt-get update && \
+    sudo apt-get install -y --no-install-recommends \
+    apt-transport-https \
+    azure-cli
