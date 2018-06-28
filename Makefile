@@ -29,16 +29,16 @@ WORKSPACE:=workspace
 EXPERIMENT:=experiment
 
 define generate_job_intel
- python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi
- 	--filename job.json
- 	--node_count $(NUM_NODES)
+ python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi \
+ 	--filename job.json \
+ 	--node_count $(NUM_NODES) \
  	--model $(MODEL)
 endef
 
 define generate_job_openmpi
- python generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 openmpi
- 	--filename job.json
- 	--node_count $(NUM_NODES)
+ python generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 openmpi \
+ 	--filename job.json \
+ 	--node_count $(NUM_NODES) \
  	--model $(MODEL)
 endef
 
