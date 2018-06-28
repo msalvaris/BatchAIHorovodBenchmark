@@ -93,7 +93,7 @@ create-cluster:
 	--image UbuntuLTS \
 	--vm-size %{VM_SIZE} \
 	--min ${NUM_NODES} --max ${NUM_NODES} \
-	--afs-name ${FILESHARE_NAME} \
+	--afs-name ${FILE_SHARE_NAME} \
 	--afs-mount-path extfs \
 	--user-name mat \
 	--password dnstvxrz \
