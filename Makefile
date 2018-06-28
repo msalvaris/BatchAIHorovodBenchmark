@@ -12,12 +12,12 @@ export PROJECT_HELP_MSG
 PWD:=$(shell pwd)
 
 # Variables for Batch AI - change as necessary
-ID:='baitbenchtf'
-LOCATION:='eastus'
-GROUP_NAME:="batch${ID}rg"
-STORAGE_ACCOUNT_NAME:="batch${ID}st"
-CONTAINER_NAME:="batch${ID}container"
-FILESHARE_NAME:="batch2${ID}share"
+ID:=baitbenchtf
+LOCATION:=eastus
+GROUP_NAME:=batch${ID}rg
+STORAGE_ACCOUNT_NAME:=batch${ID}st
+CONTAINER_NAME:=batch${ID}container
+FILESHARE_NAME:=batch2${ID}share
 VM_SIZE:=Standard_NC24rs_v3
 NUM_NODES:=2
 CLUSTER_NAME:=tfbaitbench
@@ -58,7 +58,7 @@ push:
 
 select-subscription:
 	az login -o table
-	az account set --subscription "$(SELECTED_SUBSCRIPTION)"
+	az account set --subscription $(SELECTED_SUBSCRIPTION)
 
 create-storage:
 	@echo "Creating storage account"
