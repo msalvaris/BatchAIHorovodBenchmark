@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
         curl \
         gfortran \
+        apt-transport-https \
         git && \
      	rm -rf /var/lib/apt/lists/*
 
@@ -28,5 +29,4 @@ RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ xenia
     curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-    apt-transport-https \
     azure-cli
