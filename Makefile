@@ -86,7 +86,7 @@ create-workspace:
 create-experiment:
 	az batchai workspace create -n $(EXPERIMENT) -g $(GROUP_NAME) -w $(WORKSPACE)
 
-create-cluster:
+create-cluster: set-storage
 	az batchai cluster create \
 	-w $(WORKSPACE) \
 	--name ${CLUSTER_NAME} \
