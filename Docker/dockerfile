@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         gfortran \
         apt-transport-https \
+        jq \
         git && \
      	rm -rf /var/lib/apt/lists/*
 
