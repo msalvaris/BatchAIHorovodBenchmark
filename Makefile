@@ -91,14 +91,14 @@ create-cluster:
 	-w $(WORKSPACE) \
 	--name ${CLUSTER_NAME} \
 	--image UbuntuLTS \
-	--vm-size %{VM_SIZE} \
+	--vm-size ${VM_SIZE} \
 	--min ${NUM_NODES} --max ${NUM_NODES} \
 	--afs-name ${FILE_SHARE_NAME} \
 	--afs-mount-path extfs \
 	--user-name mat \
 	--password dnstvxrz \
-	--storage-account-name $STORAGE_ACCOUNT_NAME \
-	--storage-account-key $storage_account_key
+	--storage-account-name $(STORAGE_ACCOUNT_NAME) \
+	--storage-account-key $(storage_account_key)
 
 show-cluster:
 	az batchai cluster show -n ${CLUSTER_NAME} -w $(WORKSPACE)
