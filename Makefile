@@ -124,10 +124,10 @@ list-files:
 	az batchai job file list -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr
 
 stream-stdout:
-	az batchai job stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stdout.txt
+	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stdout.txt
 
 stream-stderr:
-	az batchai job stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stderr.txt
+	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stderr.txt
 
 delete-job:
 	az batchai job delete -w $(WORKSPACE) -e $(EXPERIMENT) --name ${JOB_NAME} -y
