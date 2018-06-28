@@ -15,6 +15,7 @@ cmd_for_intel =  """source /opt/intel/compilers_and_libraries_2017.4.196/linux/m
                   -env I_MPI_DEBUG=6 
                   -env I_MPI_HYDRA_DEBUG=on
                   -env NCCL_IB_DISABLE=1 
+                  -env NCCL_SOCKET_IFNAME=eth0
                   -genvall 
                   python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
