@@ -98,7 +98,7 @@ create-cluster:
 	--user-name mat \
 	--password dnstvxrz \
 	--storage-account-name $(STORAGE_ACCOUNT_NAME) \
-	--storage-account-key $(storage_account_key)
+	--storage-account-key $(azure_storage_key)
 
 show-cluster:
 	az batchai cluster show -n ${CLUSTER_NAME} -w $(WORKSPACE)
