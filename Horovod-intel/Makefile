@@ -2,33 +2,16 @@ define PROJECT_HELP_MSG
 Usage:
     make help                   show this message
     make build                  make Horovod Keras image with Open MPI
-    make build-intel            make Horovod Keras image with Intel MPI
     make run-mpi				run training using Open MPI image
-    make run-mpi-intel			run training using Intel MPI image
     make run					run training in non-distributed mode
     make push					push Horovod Keras image with Open MPI
-    make push-intel				push Horovod Keras image with Intel MPI
 endef
 export PROJECT_HELP_MSG
 
-DATA_DIR:=/mnt/imagenet
-PWD:=$(shell pwd)
-numproc:=2
-model:=resnet101
 
-setup_volumes:=-v $(PWD)/src/execution:/mnt/script \
-	-v $(DATA_DIR):/mnt/input \
-	-v $(DATA_DIR)/temp/model:/mnt/model \
-	-v $(DATA_DIR)/temp/output:/mnt/output
-
-
-setup_environment:=--env AZ_BATCHAI_INPUT_TRAIN='/mnt/input/train' \
-	--env AZ_BATCHAI_INPUT_TEST='/mnt/input/test' \
-	--env AZ_BATCHAI_OUTPUT_MODEL='/mnt/model' \
-	--env AZ_BATCHAI_JOB_TEMP_DIR='/mnt/output'
-
+numproc:=2 # Number of precesses/GPUs
 name_prefix:=masalvar
-tag:=9-1.8-.13.2-dev # Cuda - TF version - Horovod version
+tag:=9-1.8-0.13.2 # Cuda - TF version - Horovod version
 
 define execute_mpi
  nvidia-docker run -it \

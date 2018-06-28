@@ -11,7 +11,7 @@ export PROJECT_HELP_MSG
 
 PWD:=$(shell pwd)
 
-image_name=masalvar/batchai-tf-benchmark:1.8-9.0-0.13.2 # Tensorflow - CUDA - Horovod
+image_name=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
 
 
 help:
