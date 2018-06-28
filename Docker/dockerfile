@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-COPY environment.yml .
+#COPY environment.yml .
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
