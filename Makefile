@@ -10,6 +10,7 @@ export PROJECT_HELP_MSG
 
 
 PWD:=$(shell pwd)
+
 # Variables for Batch AI - change as necessary
 ID:='baitbenchtf'
 LOCATION:='eastus'
@@ -21,22 +22,9 @@ VM_SIZE:=Standard_NC24rs_v3
 NUM_NODES:=2
 CLUSTER_NAME:=tfbaitbench
 JOB_NAME:=tf_benchmark
-MODEL=resnet50
-image_name=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
+MODEL:=resnet50
+image_name:=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
 
-
- parser.add_argument('docker_image', type=str,
-                        help='docker image to use')
-    parser.add_argument('mpi', type=str,
-                        help='mpi to use, must be install in the docker image provided options:[intelmpi, openmpi]')
-    parser.add_argument('--filename', '-f', dest='filename', type=str, nargs='?',
-                        default='job.json',
-                        help='name of the file to save job spec to')
-    parser.add_argument('--node_count', '-n', dest='node_count', type=int, nargs='?',
-                        default=1, help='the number of nodes to run the job across')
-    parser.add_argument('--model', '-m', dest='model', type=str, nargs='?',
-                        default='resnet50',
-                        help='the model to use')
 
 define generate_job_intel
  python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi
@@ -60,10 +48,7 @@ build:
 	docker build -t $(image_name) Docker
 
 run:
-	docker run -it $(image_name)
-
-run-bash:
-	docker run -it $(image_name) bash
+	docker run -v $(PWD):/workspace -it $(image_name) bash
 
 push:
 	docker push $(image_name)
@@ -141,5 +126,10 @@ delete-cluster:
 	az configure --defaults location=''
 	az batchai cluster delete --name ${CLUSTER_NAME} -g ${GROUP_NAME} -y
 	az group delete --name ${GROUP_NAME} -y
+
+setup: select-subscription create-storage set-storage set-az-defaults create-fileshare create-cluster list-clusters
+	@echo "Cluster created"
+
+
 
 .PHONY: help build push
