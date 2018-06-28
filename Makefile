@@ -23,8 +23,10 @@ NUM_NODES:=2
 CLUSTER_NAME:=tfbaitbench
 JOB_NAME:=tf_benchmark
 MODEL:=resnet50
+SELECTED_SUBSCRIPTION:='Team Danielle Internal'
 image_name:=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
-
+WORKSPACE:=workspace
+EXPERIMENT:=experiment
 
 define generate_job_intel
  python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi
@@ -76,8 +78,15 @@ create-fileshare: set-storage
 	@echo "Creating fileshare"
 	az storage share create -n $(file_share_name) --account-name $(azure_storage_account) --account-key $(azure_storage_key)
 
+create-workspace:
+	az batchai workspace create -n $(WORKSPACE) -g $(GROUP_NAME)
+
+create-experiment:
+	az batchai workspace create -n $(EXPERIMENT) -g $(GROUP_NAME) -w $(WORKSPACE)
+
 create-cluster:
-	az batchai cluster create
+	az batchai cluster create \
+	-w $(WORKSPACE) \
 	--name ${tfbaitbench} \
 	--image UbuntuLTS \
 	--vm-size %{VM_SIZE} \
@@ -90,44 +99,46 @@ create-cluster:
 	--storage-account-key $storage_account_key
 
 show-cluster:
-	az batchai cluster show -n ${CLUSTER_NAME}
+	az batchai cluster show -n ${CLUSTER_NAME} -w $(WORKSPACE)
 
 list-clusters:
-	az batchai cluster list -o table
+	az batchai cluster list -w $(WORKSPACE) -o table
 
 list-nodes:
-	az batchai cluster list-nodes -n ${CLUSTER_NAME} -o table
+	az batchai cluster list-nodes -n ${CLUSTER_NAME} -w $(WORKSPACE) -o table
 
 run-bait-intel:
 	$(call generate_job_intel, )
-	az batchai job create -n ${JOB_NAME} --cluster-name ${CLUSTER_NAME} -c job.json
+	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
 
 run-bait-openmpi:
 	$(call generate_job_openmpi, )
-	az batchai job create -n ${JOB_NAME} --cluster-name ${CLUSTER_NAME} -c job.json
+	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
 
 list-jobs:
-	az batchai job list -o table
+	az batchai job list -w $(WORKSPACE) -e $(EXPERIMENT) -o table
 
 list-files:
-	az batchai job list-files --name ${JOB_NAME} --output-directory-id stdouterr
+	az batchai job file list -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr
 
 stream-stdout:
-	az batchai job stream-file --job-name ${JOB_NAME} --output-directory-id stdouterr --name stdout.txt
+	az batchai job stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stdout.txt
 
 stream-stderr:
-	az batchai job stream-file --job-name ${JOB_NAME} --output-directory-id stdouterr --name stderr.txt
+	az batchai job stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stderr.txt
 
 delete-job:
-	az batchai job delete --name --job-name ${JOB_NAME} -y
+	az batchai job delete -w $(WORKSPACE) -e $(EXPERIMENT) --name ${JOB_NAME} -y
 
 delete-cluster:
 	az configure --defaults group=''
 	az configure --defaults location=''
-	az batchai cluster delete --name ${CLUSTER_NAME} -g ${GROUP_NAME} -y
+	az batchai cluster delete -w $(WORKSPACE) --name ${CLUSTER_NAME} -g ${GROUP_NAME} -y
+	az batchai experiment delete -w $(WORKSPACE) --name ${experiment} -g ${GROUP_NAME} -y
+	az batchai workspace delete -w ${WORKSPACE} -g ${GROUP_NAME} -y
 	az group delete --name ${GROUP_NAME} -y
 
-setup: select-subscription create-storage set-storage set-az-defaults create-fileshare create-cluster list-clusters
+setup: select-subscription create-workspace create-storage set-storage set-az-defaults create-fileshare create-cluster list-clusters
 	@echo "Cluster created"
 
 
