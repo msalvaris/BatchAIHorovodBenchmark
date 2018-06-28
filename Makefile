@@ -23,6 +23,9 @@ build:
 run:
 	docker run -it $(image_name)
 
+run-bash:
+	docker run -it $(image_name) bash
+
 push:
 	docker push $(image_name)
 
