@@ -60,9 +60,11 @@ select-subscription:
 	az login -o table
 	az account set --subscription $(SELECTED_SUBSCRIPTION)
 
+create-resource-group:
+	az group create -n $(GROUP_NAME) -l $(LOCATION) -o table
+
 create-storage:
 	@echo "Creating storage account"
-	az group create -n $(GROUP_NAME) -l $(LOCATION) -o table
 	az storage account create -l $(LOCATION) -n $(STORAGE_ACCOUNT_NAME) -g $(GROUP_NAME) --sku Standard_LRS
 
 set-storage:
@@ -138,7 +140,7 @@ delete-cluster:
 	az batchai workspace delete -w ${WORKSPACE} -g ${GROUP_NAME} -y
 	az group delete --name ${GROUP_NAME} -y
 
-setup: select-subscription create-workspace create-storage set-storage set-az-defaults create-fileshare create-cluster list-clusters
+setup: select-subscription create-resource-group create-workspace create-storage set-storage set-az-defaults create-fileshare create-cluster list-clusters
 	@echo "Cluster created"
 
 
