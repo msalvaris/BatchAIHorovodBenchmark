@@ -89,7 +89,7 @@ create-experiment:
 create-cluster:
 	az batchai cluster create \
 	-w $(WORKSPACE) \
-	--name ${tfbaitbench} \
+	--name ${CLUSTER_NAME} \
 	--image UbuntuLTS \
 	--vm-size %{VM_SIZE} \
 	--min ${NUM_NODES} --max ${NUM_NODES} \
