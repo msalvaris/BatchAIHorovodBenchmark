@@ -35,7 +35,6 @@ mpirun -np {total_processes}
 -mca btl ^openib 
 -x NCCL_IB_DISABLE=1 
 --allow-run-as-root 
---hostfile $AZ_BATCHAI_MPI_HOST_FILE 
 python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
 # Running on Single GPU
