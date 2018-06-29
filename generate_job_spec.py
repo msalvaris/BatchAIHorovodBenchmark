@@ -5,6 +5,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Config for Intel
 cmd_for_intel =  """source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; 
                   echo $AZ_BATCH_HOST_LIST; 
                   ifconfig -a; 
@@ -19,6 +20,7 @@ cmd_for_intel =  """source /opt/intel/compilers_and_libraries_2017.4.196/linux/m
                   -genvall 
                   python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
+# Config for OpenMPI
 cmd_for_openmpi =  """echo $AZ_BATCH_HOST_LIST; 
                     cat $AZ_BATCHAI_MPI_HOST_FILE; 
                     ifconfig -a; 
@@ -34,9 +36,13 @@ cmd_for_openmpi =  """echo $AZ_BATCH_HOST_LIST;
                     --allow-run-as-root --hostfile $AZ_BATCHAI_MPI_HOST_FILE 
                     python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
+# Running on Single GPU
+cmd_local="""python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64""".replace('\n', '')
+
 cmd_choice_dict={
     'openmpi':cmd_for_openmpi,
-    'intelmpi':cmd_for_intel
+    'intelmpi':cmd_for_intel,
+    'local':cmd_local
 }
 
 def generate_job_dict(image_name,
@@ -56,16 +62,6 @@ def generate_job_dict(image_name,
                                               model=model)
             },
             "stdOutErrPathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/extfs",
-            "inputDirectories": [{
-                "id": "SCRIPTS",
-                "path": "$AZ_BATCHAI_MOUNT_ROOT/extfs/scripts"
-            },
-            ],
-            "outputDirectories": [{
-                "id": "MODEL",
-                "pathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/extfs",
-                "pathSuffix": "Models"
-            }],
             "containerSettings": {
                 "imageSourceRegistry": {
                     "image": image_name
@@ -104,7 +100,7 @@ if __name__=='__main__':
     parser.add_argument('docker_image', type=str,
                         help='docker image to use')
     parser.add_argument('mpi', type=str,
-                        help='mpi to use, must be install in the docker image provided options:[intelmpi, openmpi]')
+                        help='mpi to use, must be install in the docker image provided options:[intelmpi, openmpi, local]')
     parser.add_argument('--filename', '-f', dest='filename', type=str, nargs='?',
                         default='job.json',
                         help='name of the file to save job spec to')
