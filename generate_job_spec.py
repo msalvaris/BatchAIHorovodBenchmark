@@ -13,12 +13,7 @@ ifconfig -a;
 mpirun -n {total_processes} -ppn {processes_per_node} -hosts $AZ_BATCH_HOST_LIST 
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
--env I_MPI_DYNAMIC_CONNECTION=0 
--env I_MPI_DEBUG=6 
--env I_MPI_HYDRA_DEBUG=on 
--env NCCL_IB_DISABLE=1 
--env NCCL_SOCKET_IFNAME=eth0 
--genvall 
+-env I_MPI_DYNAMIC_CONNECTION=0   
 python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
 # Config for OpenMPI
