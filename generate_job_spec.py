@@ -12,7 +12,7 @@ cmd_for_intel =  \
 echo $AZ_BATCH_HOST_LIST; 
 ifconfig -a; 
 printenv; 
-mpirun -n {total_processes} -ppn {processes_per_node} -hosts {hosts} 
+mpirun -n {total_processes} -ppn {processes_per_node}
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
 -env I_MPI_DYNAMIC_CONNECTION=0 
@@ -35,6 +35,7 @@ mpirun -np {total_processes}
 -mca btl ^openib 
 -x NCCL_IB_DISABLE=1 
 --allow-run-as-root 
+--hostfile $AZ_BATCHAI_MPI_HOST_FILE 
 python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
 # Running on Single GPU
