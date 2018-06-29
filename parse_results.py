@@ -4,8 +4,6 @@ import json
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-import ipdb
-
 
 def extract_mpi_type(file):
     return file.split('_')[-1].strip('.results')
@@ -17,8 +15,7 @@ def extract_gpu_type(file):
 def extract_images_per_second(data):
     def _extract(line_string):
         if 'total images/sec' in line_string:
-            ipdb.set_trace()
-            return float(line_string.split(':').strip())
+            return float(line_string.split(':')[-1].strip())
 
     return np.array(map(_extract, data)).mean()
 
@@ -26,31 +23,31 @@ def extract_images_per_second(data):
 def extract_batch_size(data):
     for line in data:
         if 'Batch size: ' in line:
-            return int(line.split(':').strip('global'))
+            return int(line.split(':')[-1].strip('global'))
 
 
 def extract_model(data):
     for line in data:
         if 'Model: ' in line:
-            return line.split(':').strip()
+            return line.split(':')[-1].strip()
 
 
 def extract_tf_version(data):
     for line in data:
         if 'TensorFlow: ' in line:
-            return line.split(':').strip()
+            return line.split(':')[-1].strip()
 
 
 def extact_dataset(data):
     for line in data:
         if 'Dataset: ' in line:
-            return line.split(':').strip()
+            return line.split(':')[-1].strip()
 
 
 def extract_num_devices(data):
     for line in data:
         if 'Devices: ' in line:
-            return len(eval(line.split(':').strip()))
+            return len(eval(line.split(':')[-1].strip()))
 
 
 extraction_funcs = {
