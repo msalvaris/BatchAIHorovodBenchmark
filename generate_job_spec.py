@@ -5,12 +5,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# $AZ_BATCH_HOST_LIST
 # Config for Intel
 cmd_for_intel =  \
 """source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; 
 echo $AZ_BATCH_HOST_LIST; 
 ifconfig -a; 
-mpirun -n {total_processes} -ppn {processes_per_node} -hosts localhost 
+printenv; 
+mpirun -n {total_processes} -ppn {processes_per_node} -hosts {hosts} 
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
 -env I_MPI_DYNAMIC_CONNECTION=0 
@@ -32,7 +34,8 @@ mpirun -np {total_processes}
 -x NCCL_SOCKET_IFNAME=eth0 
 -mca btl ^openib 
 -x NCCL_IB_DISABLE=1 
---allow-run-as-root --hostfile $AZ_BATCHAI_MPI_HOST_FILE 
+--allow-run-as-root 
+--hostfile $AZ_BATCHAI_MPI_HOST_FILE 
 python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
 # Running on Single GPU
@@ -51,6 +54,7 @@ def generate_job_dict(image_name,
                       total_processes=None,
                       processes_per_node=4):
     total_processes = processes_per_node*node_count if total_processes is None else total_processes
+    hosts = '$AZ_BATCH_HOST_LIST' if node_count > 1 else 'localhost'
     return {
         "$schema": "https://raw.githubusercontent.com/Azure/BatchAI/master/schemas/2017-09-01-preview/job.json",
         "properties": {
@@ -58,7 +62,8 @@ def generate_job_dict(image_name,
             "customToolkitSettings": {
                 "commandLine": command.format(total_processes=total_processes,
                                               processes_per_node=processes_per_node,
-                                              model=model)
+                                              model=model,
+                                              hosts=hosts )
             },
             "stdOutErrPathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/extfs",
             "containerSettings": {
