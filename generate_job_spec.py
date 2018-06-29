@@ -60,8 +60,8 @@ def generate_job_dict(image_name,
                       total_processes=None,
                       processes_per_node=4):
     total_processes = processes_per_node*node_count if total_processes is None else total_processes
-    command = cmd_choice_dict.get(mpitype, 'intelmpi')
-    hosts = hosts_param.get(mpitype, 'intelmpi')
+    command = cmd_choice_dict.get(mpitype, cmd_for_intel)
+    hosts =  hosts_param.get(mpitype, '') if node_count>1 else hosts_param['local']
 
     return {
         "$schema": "https://raw.githubusercontent.com/Azure/BatchAI/master/schemas/2017-09-01-preview/job.json",
