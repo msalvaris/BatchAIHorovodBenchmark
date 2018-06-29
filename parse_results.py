@@ -82,7 +82,7 @@ def main(path='*.results', filename='results.json'):
     files = glob('*.results')
     logger.info('Found {} files'.format(len(files)))
     results = [parse_results(file) for file in files]
-    logger.info('Writing results to'.format(filename))
+    logger.info('Writing results to {}'.format(filename))
     write_json_to_file(results, filename)
 
 if __name__=='__main__':
