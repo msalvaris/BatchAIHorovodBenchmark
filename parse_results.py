@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def extract_mpi_type(file):
-    return file.split('_')[-1].strip('.results')
+    return file.split('_')[-1].split('.')[0]
 
 def extract_gpu_type(file):
     return file.split('_')[-2]
