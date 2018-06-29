@@ -4,6 +4,8 @@ import json
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+import ipdb
+
 
 def extract_mpi_type(file):
     return file.split('_')[-1].strip('.results')
@@ -15,7 +17,7 @@ def extract_gpu_type(file):
 def extract_images_per_second(data):
     def _extract(line_string):
         if 'total images/sec' in line_string:
-            print(line_string.split(':').strip())
+            ipdb.set_trace()
             return float(line_string.split(':').strip())
 
     return np.array(map(_extract, data)).mean()
