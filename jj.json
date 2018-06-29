@@ -7,7 +7,7 @@
       }
     },
     "customToolkitSettings": {
-      "commandLine": "source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; echo $AZ_BATCH_HOST_LIST"
+      "commandLine": "source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; echo $AZ_BATCH_HOST_LIST; printenv"
     },
     "nodeCount": 1,
     "stdOutErrPathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/extfs"
