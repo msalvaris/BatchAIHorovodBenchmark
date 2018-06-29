@@ -6,19 +6,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Config for Intel
-cmd_for_intel =  \
-"""source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh;  
-echo $AZ_BATCH_HOST_LIST;  
-ifconfig -a;  
-mpirun -n {total_processes} -ppn {processes_per_node} -hosts $AZ_BATCH_HOST_LIST  
--env I_MPI_FABRICS=dapl  
--env I_MPI_DAPL_PROVIDER=ofa-v2-ib0  
--env I_MPI_DYNAMIC_CONNECTION=0  
--env I_MPI_DEBUG=6  
--env I_MPI_HYDRA_DEBUG=on  
--env NCCL_IB_DISABLE=1  
--env NCCL_SOCKET_IFNAME=eth0  
-python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
+cmd_for_intel =  "source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; \
+      cat /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; \
+      echo $AZ_BATCH_HOST_LIST; \
+      ifconfig -a; \
+      mpirun -n 1 -ppn 1 -hosts $AZ_BATCH_HOST_LIST \
+      -env I_MPI_FABRICS=dapl \
+      -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 \
+      -env I_MPI_DYNAMIC_CONNECTION=0 \
+      -env I_MPI_DEBUG=6 \
+      -env I_MPI_HYDRA_DEBUG=on \
+      -env NCCL_DEBUG=INFO \
+      -env NCCL_IB_HCA=mlx4_0 \
+      -genvall \
+      python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model resnet50 --batch_size 64 --variable_update horovod "
 
 # Config for OpenMPI
 cmd_for_openmpi =  \
