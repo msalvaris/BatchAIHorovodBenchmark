@@ -43,9 +43,17 @@ cmd_choice_dict={
 }
 
 hosts_param={
-    ('openmpi', 2):'--hostfile $AZ_BATCHAI_MPI_HOST_FILE ',
-    ('intelmpi', 2):'-hosts $AZ_BATCH_HOST_LIST '
+    'openmpi':'--hostfile $AZ_BATCHAI_MPI_HOST_FILE ',
+    'intelmpi':'-hosts $AZ_BATCH_HOST_LIST ',
+    'local': ''
 }
+
+def _hosts_for(mpitype, node_count):
+    if node_count>1:
+        return hosts_param.get(mpitype, '')
+    else:
+        return hosts_param.get('local')
+
 
 def generate_job_dict(image_name,
                       mpitype,
@@ -55,7 +63,6 @@ def generate_job_dict(image_name,
                       processes_per_node=4):
     total_processes = processes_per_node*node_count if total_processes is None else total_processes
     command = cmd_choice_dict.get(mpitype, cmd_for_intel)
-    hosts = hosts_param.get((mpitype, node_count), '')
 
     return {
         "$schema": "https://raw.githubusercontent.com/Azure/BatchAI/master/schemas/2017-09-01-preview/job.json",
@@ -65,7 +72,7 @@ def generate_job_dict(image_name,
                 "commandLine": command.format(total_processes=total_processes,
                                               processes_per_node=processes_per_node,
                                               model=model,
-                                              hosts=hosts )
+                                              hosts=_hosts_for(mpitype, node_count) )
             },
             "stdOutErrPathPrefix": "$AZ_BATCHAI_MOUNT_ROOT/extfs",
             "containerSettings": {
