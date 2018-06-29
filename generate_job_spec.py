@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 cmd_for_intel =  \
 """source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; 
 echo $AZ_BATCH_HOST_LIST; 
-ifconfig -a; 
-printenv; 
 mpirun -n {total_processes} -ppn {processes_per_node} {hosts}
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
@@ -24,9 +22,6 @@ python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model
 cmd_for_openmpi =  \
 """echo $AZ_BATCH_HOST_LIST; 
 cat $AZ_BATCHAI_MPI_HOST_FILE; 
-ifconfig -a; 
-ibv_devinfo -v; 
-nvidia-smi topo -m; 
 mpirun -np {total_processes} 
 -bind-to none -map-by slot 
 -x NCCL_DEBUG=INFO -x LD_LIBRARY_PATH 
@@ -38,7 +33,7 @@ mpirun -np {total_processes}
 {hosts} 
 python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
-# Running on Single GPU
+# Running on single node without mpi
 cmd_local="""python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64""".replace('\n', '')
 
 cmd_choice_dict={
