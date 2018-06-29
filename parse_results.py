@@ -26,7 +26,7 @@ def extract_images_per_second(data):
 def extract_batch_size(data):
     for line in data:
         if 'Batch size: ' in line:
-            return int(line.split(':')[-1].strip('global'))
+            return int(line.split(':')[-1].strip().split(' ')[0])
 
 
 def extract_model(data):
