@@ -5,14 +5,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# $AZ_BATCH_HOST_LIST
+#
 # Config for Intel
 cmd_for_intel =  \
 """source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; 
 echo $AZ_BATCH_HOST_LIST; 
 ifconfig -a; 
 printenv; 
-mpirun -n {total_processes} -ppn {processes_per_node} 
+mpirun -n {total_processes} -ppn {processes_per_node} {hosts}
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
 -env I_MPI_DYNAMIC_CONNECTION=0 
@@ -35,7 +35,7 @@ mpirun -np {total_processes}
 -mca btl ^openib 
 -x NCCL_IB_DISABLE=1 
 --allow-run-as-root 
---hostfile $AZ_BATCHAI_MPI_HOST_FILE 
+{hosts} 
 python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64 --variable_update horovod""".replace('\n', '')
 
 # Running on Single GPU
@@ -47,14 +47,22 @@ cmd_choice_dict={
     'local':cmd_local
 }
 
+hosts_param={
+    'openmpi':'--hostfile $AZ_BATCHAI_MPI_HOST_FILE ',
+    'intelmpi':'-hosts $AZ_BATCH_HOST_LIST ',
+    'local':''
+}
+
 def generate_job_dict(image_name,
-                      command,
+                      mpitype,
                       node_count=2,
                       model='resnet50',
                       total_processes=None,
                       processes_per_node=4):
     total_processes = processes_per_node*node_count if total_processes is None else total_processes
-    hosts = '$AZ_BATCH_HOST_LIST' if node_count > 1 else 'localhost'
+    command = cmd_choice_dict.get(mpitype, 'intelmpi')
+    hosts = hosts_param.get(mpitype, 'intelmpi')
+
     return {
         "$schema": "https://raw.githubusercontent.com/Azure/BatchAI/master/schemas/2017-09-01-preview/job.json",
         "properties": {
@@ -90,7 +98,7 @@ def main(image_name,
          processes_per_node=4):
     logger.info('Creating manifest {} with {} image...'.format(filename, image_name))
     job_template = generate_job_dict(image_name,
-                                     cmd_choice_dict.get(mpitype, 'intelmpi'),
+                                     mpitype,
                                      node_count=node_count,
                                      model=model,
                                      total_processes=total_processes,
