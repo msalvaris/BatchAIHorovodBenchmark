@@ -2,9 +2,21 @@ define PROJECT_HELP_MSG
 Usage:
     make help                   show this message
     make build                  build docker image
-    make push					push container
-    make run					run benchmarking
-    make clean
+    make push					 push container
+    make run					 run benchmarking container
+    make setup                  setup the cluster
+    make show-cluster
+    make list-clusters
+    make run-bait-intel         run batch ai benchamrk using intel mpi
+    make run-bait-openmpi       run batch ai benchmark using open mpi
+    make run-bait-local         run batch ai benchmark on one node
+    make list-jobs
+    make list-files
+    make stream-stdout
+    make stream-stderr
+    make delete-job
+    make delete-cluster
+    make delete                 delete everything including experiments, workspace and resource group
 endef
 export PROJECT_HELP_MSG
 
@@ -152,9 +164,12 @@ delete-cluster:
 	az configure --defaults group=''
 	az configure --defaults location=''
 	az batchai cluster delete -w $(WORKSPACE) --name ${CLUSTER_NAME} -g ${GROUP_NAME} -y
+
+delete: delete-cluster
 	az batchai experiment delete -w $(WORKSPACE) --name ${experiment} -g ${GROUP_NAME} -y
 	az batchai workspace delete -w ${WORKSPACE} -g ${GROUP_NAME} -y
 	az group delete --name ${GROUP_NAME} -y
+
 
 setup: select-subscription create-resource-group create-workspace create-storage set-storage set-az-defaults create-fileshare create-cluster list-clusters
 	@echo "Cluster created"
