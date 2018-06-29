@@ -50,7 +50,7 @@ def extact_dataset(data):
 def extract_num_devices(data):
     for line in data:
         if 'Devices: ' in line:
-            return len(eval(line.split(':')[-1].strip()))
+            return eval(line.split(':')[-1].strip())
 
 
 extraction_funcs = {
