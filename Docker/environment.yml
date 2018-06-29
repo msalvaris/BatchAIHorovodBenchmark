@@ -14,5 +14,3 @@ dependencies:
   - phantomjs
   - pillow
   - bokeh=0.13.0
-  - pip:
-    - shell-functools
