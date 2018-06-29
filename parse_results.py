@@ -15,7 +15,7 @@ def extract_gpu_type(file):
 def extract_images_per_second(data):
     def _extract(line_string):
         if 'total images/sec' in line_string:
-            logger.info(line_string.split(':').strip())
+            print(line_string.split(':').strip())
             return float(line_string.split(':').strip())
 
     return np.array(map(_extract, data)).mean()
