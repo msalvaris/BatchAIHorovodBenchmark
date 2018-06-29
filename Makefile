@@ -27,6 +27,7 @@ SELECTED_SUBSCRIPTION:="Team Danielle Internal"
 image_name:=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
 WORKSPACE:=workspace
 EXPERIMENT:=experiment
+PROCESSES_PER_NODE:=4
 
 define generate_job_intel
  python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi \
@@ -47,7 +48,8 @@ define generate_job_local
  python generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 local \
  	--filename job.json \
  	--node_count 1 \
- 	--model $(MODEL)
+ 	--model $(MODEL) \
+ 	--ppn $(PROCESSES_PER_NODE)
 endef
 
 

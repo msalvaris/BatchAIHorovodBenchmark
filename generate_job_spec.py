@@ -109,9 +109,13 @@ if __name__=='__main__':
     parser.add_argument('--model', '-m', dest='model', type=str, nargs='?',
                         default='resnet50',
                         help='the model to use')
+    parser.add_argument('--ppn', dest='processes_per_node', type=int, nargs='?',
+                        default=4,
+                        help='number of GPU proceses to run per node')
     args = parser.parse_args()
     main(args.docker_image,
          args.mpi,
          filename=args.filename,
          node_count=args.node_count,
-         model=args.model)
+         model=args.model,
+         processes_per_node=args.processes_per_node)
