@@ -12,7 +12,7 @@ cmd_for_intel =  \
 echo $AZ_BATCH_HOST_LIST; 
 ifconfig -a; 
 printenv; 
-mpirun -n {total_processes} -ppn {processes_per_node}
+mpirun -n {total_processes} -ppn {processes_per_node} 
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
 -env I_MPI_DYNAMIC_CONNECTION=0 
