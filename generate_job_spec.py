@@ -10,7 +10,7 @@ cmd_for_intel =  \
 """source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh; 
 echo $AZ_BATCH_HOST_LIST; 
 ifconfig -a; 
-mpirun -n {total_processes} -ppn {processes_per_node} -hosts localhost 
+mpirun -n {total_processes} -ppn {processes_per_node} -hosts $AZ_BATCH_HOST_LIST 
 -env I_MPI_FABRICS=dapl 
 -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 
 -env I_MPI_DYNAMIC_CONNECTION=0 
