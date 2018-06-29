@@ -43,6 +43,14 @@ define generate_job_openmpi
 endef
 
 
+define generate_job_local
+ python generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 local \
+ 	--filename job.json \
+ 	--node_count 1 \
+ 	--model $(MODEL)
+endef
+
+
 help:
 	echo "$$PROJECT_HELP_MSG" | less
 
@@ -115,6 +123,10 @@ run-bait-intel:
 
 run-bait-openmpi:
 	$(call generate_job_openmpi, )
+	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
+
+run-bait-local:
+	$(call generate_job_local, )
 	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
 
 list-jobs:
