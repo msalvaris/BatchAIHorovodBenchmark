@@ -17,7 +17,7 @@ def extract_images_per_second(data):
         if 'total images/sec' in line_string:
             return float(line_string.split(':')[-1].strip())
 
-    return np.array(map(_extract, data)).mean()
+    return np.array(list(map(_extract, data))).mean()
 
 
 def extract_batch_size(data):
