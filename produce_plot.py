@@ -59,7 +59,7 @@ def main(filename='results.json'):
 
     
     
-    export_svgs(p, filename="plot.svg")
+    export_svgs(p, height=400, width=800, filename="plot.svg")
 
 
 if __name__=="__main__":
