@@ -267,7 +267,7 @@ results.json: 1gpulocal_v100_local.results 1gpuintel_v100_intel.results 2gpuinte
 16gpuopen_v100_open.results 32gpuopen_v100_open.results
 	python parse_results.py
 
-1gpulocal_$(GPU_TYPEk)_local.results:
+1gpulocal_$(GPU_TYPE)_local.results:
 	$(call stream_stdout, 1gpulocal)>1gpulocal_v100_local.results
 
 
