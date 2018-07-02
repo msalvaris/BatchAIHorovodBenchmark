@@ -38,7 +38,7 @@ def main(filename='results.json'):
 
     p.y_range.start = 0
     p.x_range.range_padding = 0.3
-    p.xaxis.major_label_orientation = 1
+    p.xaxis.major_label_orientation = 1.2
     p.xgrid.grid_line_color = None
     p.yaxis.axis_label = 'Images/Second'
     vb2 = p.vbar(x=[-2], top=[350], width=0.9, line_color="white", fill_color=palette[-1])
@@ -52,14 +52,13 @@ def main(filename='results.json'):
     citation = Label(x=-4.8, y=-1300,
                      text='Single GPU', render_mode='css',
                      border_line_color=None,
-                     background_fill_color=None, angle=1, text_font_size='12pt',
+                     background_fill_color=None, angle=1.2, text_font_size='12pt',
                      text_color=palette[-1])
 
     p.add_layout(citation)
 
-    # p.output_backend = "svg"
-    # export_svgs(p, filename="plot.svg")
-    export_png(p, filename="plot.png")
+    p.output_backend = "svg"
+    export_svgs(p, filename="plot.svg")
 
 
 if __name__=="__main__":
