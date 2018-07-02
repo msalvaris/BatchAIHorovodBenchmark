@@ -40,6 +40,7 @@ image_name:=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Hor
 WORKSPACE:=workspace
 EXPERIMENT:=experiment
 PROCESSES_PER_NODE:=4
+GPU_TYPE:='v100'
 
 define generate_job_intel
  python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi \
@@ -266,7 +267,7 @@ results.json: 1gpulocal_v100_local.results 1gpuintel_v100_intel.results 2gpuinte
 16gpuopen_v100_open.results 32gpuopen_v100_open.results
 	python parse_results.py
 
-1gpulocal_v100_local.results:
+1gpulocal_$(GPU_TYPEk)_local.results:
 	$(call stream_stdout, 1gpulocal)>1gpulocal_v100_local.results
 
 
