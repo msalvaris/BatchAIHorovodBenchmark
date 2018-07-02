@@ -29,37 +29,40 @@ def main(filename='results.json'):
 
     res_dict = results['Images/Second'].to_dict()
     factors = list(res_dict.keys())
-    source = ColumnDataSource(data=dict(x=factors, counts=list(res_dict.values()), MPI=results['MPI']))
-    p = figure(x_range=FactorRange(*factors), plot_height=500, plot_width=800, output_backend="svg",
+    counts = list(res_dict.values())
+    MPI = results['MPI'].tolist()
+    factors.insert(0, ('1', 'Single GPU'))
+    counts.insert(0, df[df['MPI']=='local']['Images/Second'].iloc[0])
+    MPI.insert(0, 'Single GPU')
+    source = ColumnDataSource(data=dict(x=factors, counts=counts, MPI=MPI))
+
+    p = figure(x_range=FactorRange(*factors), plot_height=800, plot_width=1600, output_backend="svg",
                toolbar_location=None, tools="", title="Training throughput for ResNet50 with synthetic data (V100)")
     p.output_backend = "svg"
     p.vbar(x='x', top='counts', width=0.9, source=source, line_color="white", legend='MPI',
-                fill_color=factor_cmap('x', palette=palette, factors=['IntelMPI', 'OpenMPI+NCCL'], start=1, end=4))
+                fill_color=factor_cmap('x', palette=palette, factors=['IntelMPI', 'OpenMPI+NCCL','Single GPU'], start=1, end=3))
 
     p.y_range.start = 0
-    p.x_range.range_padding = 0.3
+    p.x_range.range_padding = 0.1
     p.xaxis.major_label_orientation = 1.3
+    p.xaxis.group_text_font_size='20px'
+    p.xaxis.major_label_text_font_size='15px'
     p.xgrid.grid_line_color = None
+    
+    p.yaxis.axis_label_text_font_size='20px'
+    p.yaxis.major_label_text_font_size='20px'
+
     p.yaxis.axis_label = 'Images/Second'
-    vb2 = p.vbar(x=[-2], top=[350], width=0.9, line_color="white", fill_color=palette[-1])
+    p.xaxis.axis_label = 'Number of GPUs'
+    p.xaxis.axis_label_text_font_size='20px'
     a = p.renderers[4]
     a.visible = False
     legend = Legend(items=[
-        a.items[0],
-        LegendItem(label="Single GPU", renderers=[vb2])
-    ], location=(0, 100))
+        a.items[0]
+    ], location=(0, 400))
+    legend.label_text_font_size='20px'
     p.add_layout(legend, 'right')
-    citation = Label(x=-2, y=500,
-                     text='Single GPU',
-                     border_line_color=None,
-                     background_fill_color=None, angle=1.3, text_font_size='12pt',
-                     text_color=palette[-1])
-
-    p.add_layout(citation)
-
-    
-    
-    export_svgs(p, height=400, width=800, filename="plot.svg")
+    export_svgs(p, filename="plot.svg")
 
 
 if __name__=="__main__":
