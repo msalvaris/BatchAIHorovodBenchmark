@@ -41,6 +41,7 @@ WORKSPACE:=workspace
 EXPERIMENT:=experiment
 PROCESSES_PER_NODE:=4
 GPU_TYPE:='v100'
+RESULTS_PATH='results'
 
 define generate_job_intel
  python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi \
@@ -187,9 +188,6 @@ setup: select-subscription create-resource-group create-workspace create-storage
 	@echo "Cluster created"
 
 
-
-
-
 ###### Submit Jobs ######
 
 
@@ -261,65 +259,64 @@ submit-jobs:
 
 ###### Gather Results ######
 
-results.json: 1gpulocal_v100_local.results 1gpuintel_v100_intel.results 2gpuintel_v100_intel.results 3gpuintel_v100_intel.results \
-4gpuintel_v100_intel.results 8gpuintel_v100_intel.results 16gpuintel_v100_intel.results 32gpuintel_v100_intel.results \
-1gpuopen_v100_open.results 2gpuopen_v100_open.results 3gpuopen_v100_open.results 4gpuopen_v100_open.results 8gpuopen_v100_open.results \
-16gpuopen_v100_open.results 32gpuopen_v100_open.results
+gather_results:$(RESULTS_PATH)/$(GPU_TYPE)/$(MODEL)/results.json
+	@echo "All results gathered"
+
+$(RESULTS_PATH)/$(GPU_TYPE)/$(MODEL)/results.json: 1gpulocal_$(GPU_TYPE)_local.results 1gpuintel_$(GPU_TYPE)_intel.results 2gpuintel_$(GPU_TYPE)_intel.results 3gpuintel_$(GPU_TYPE)_intel.results \
+4gpuintel_$(GPU_TYPE)_intel.results 8gpuintel_$(GPU_TYPE)_intel.results 16gpuintel_$(GPU_TYPE)_intel.results 32gpuintel_$(GPU_TYPE)_intel.results \
+1gpuopen_$(GPU_TYPE)_open.results 2gpuopen_$(GPU_TYPE)_open.results 3gpuopen_$(GPU_TYPE)_open.results 4gpuopen_$(GPU_TYPE)_open.results 8gpuopen_$(GPU_TYPE)_open.results \
+16gpuopen_$(GPU_TYPE)_open.results 32gpuopen_$(GPU_TYPE)_open.results
 	python parse_results.py
 
 
-test: 1gpulocal_$(GPU_TYPE)_local.results
-	@echo hahaha
-
-
 1gpulocal_$(GPU_TYPE)_local.results:
-	$(call stream_stdout, 1gpulocal)>1gpulocal_v100_local.results
+	$(call stream_stdout, 1gpulocal)>1gpulocal_$(GPU_TYPE)_local.results
 
 
 
-1gpuintel_v100_intel.results:
-	$(call stream_stdout, 1gpuintel)>1gpuintel_v100_intel.results
+1gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 1gpuintel)>1gpuintel_$(GPU_TYPE)_intel.results
 
-2gpuintel_v100_intel.results:
-	$(call stream_stdout, 2gpuintel)>2gpuintel_v100_intel.results
+2gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 2gpuintel)>2gpuintel_$(GPU_TYPE)_intel.results
 
-3gpuintel_v100_intel.results:
-	$(call stream_stdout, 3gpuintel)>3gpuintel_v100_intel.results
+3gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 3gpuintel)>3gpuintel_$(GPU_TYPE)_intel.results
 
-4gpuintel_v100_intel.results:
-	$(call stream_stdout, 4gpuintel)>4gpuintel_v100_intel.results
+4gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 4gpuintel)>4gpuintel_$(GPU_TYPE)_intel.results
 
-8gpuintel_v100_intel.results:
-	$(call stream_stdout, 8gpuintel)>8gpuintel_v100_intel.results
+8gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 8gpuintel)>8gpuintel_$(GPU_TYPE)_intel.results
 
-16gpuintel_v100_intel.results:
-	$(call stream_stdout, 16gpuintel)>16gpuintel_v100_intel.results
+16gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 16gpuintel)>16gpuintel_$(GPU_TYPE)_intel.results
 
-32gpuintel_v100_intel.results:
-	$(call stream_stdout, 32gpuintel)>32gpuintel_v100_intel.results
+32gpuintel_$(GPU_TYPE)_intel.results:
+	$(call stream_stdout, 32gpuintel)>32gpuintel_$(GPU_TYPE)_intel.results
 
 
 
-1gpuopen_v100_open.results:
-	$(call stream_stdout, 1gpuopen)>1gpuopen_v100_open.results
+1gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 1gpuopen)>1gpuopen_$(GPU_TYPE)_open.results
 
-2gpuopen_v100_open.results:
-	$(call stream_stdout, 2gpuopen)>2gpuopen_v100_open.results
+2gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 2gpuopen)>2gpuopen_$(GPU_TYPE)_open.results
 
-3gpuopen_v100_open.results:
-	$(call stream_stdout, 3gpuopen)>3gpuopen_v100_open.results
+3gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 3gpuopen)>3gpuopen_$(GPU_TYPE)_open.results
 
-4gpuopen_v100_open.results:
-	$(call stream_stdout, 4gpuopen)>4gpuopen_v100_open.results
+4gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 4gpuopen)>4gpuopen_$(GPU_TYPE)_open.results
 
-8gpuopen_v100_open.results:
-	$(call stream_stdout, 8gpuopen)>8gpuopen_v100_open.results
+8gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 8gpuopen)>8gpuopen_$(GPU_TYPE)_open.results
 
-16gpuopen_v100_open.results:
-	$(call stream_stdout, 16gpuopen)>16gpuopen_v100_open.results
+16gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 16gpuopen)>16gpuopen_$(GPU_TYPE)_open.results
 
-32gpuopen_v100_open.results:
-	$(call stream_stdout, 32gpuopen)>32gpuopen_v100_open.results
+32gpuopen_$(GPU_TYPE)_open.results:
+	$(call stream_stdout, 32gpuopen)>32gpuopen_$(GPU_TYPE)_open.results
 
 
 
