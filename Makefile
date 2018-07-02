@@ -182,7 +182,7 @@ setup: select-subscription create-resource-group create-workspace create-storage
 
 
 1gpulocal_v100_local.results:
-	$(call stream_stdout, 1gpulocal)
+	$(call stream_stdout, 1gpulocal)>1gpulocal_v100_local.results
 
 #
 #make stream-stdout JOB_NAME=1gpulocal>
