@@ -3,7 +3,7 @@ from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 from bokeh.models import Legend, LegendItem
 from bokeh.models import Label
-from bokeh.io import export_svgs
+from bokeh.io import export_svgs, export_png
 import pandas as pd
 import json
 
@@ -57,8 +57,9 @@ def main(filename='results.json'):
 
     p.add_layout(citation)
 
-    p.output_backend = "svg"
-    export_svgs(p, filename="plot.svg")
+    # p.output_backend = "svg"
+    # export_svgs(p, filename="plot.svg")
+    export_png(p, filename="plot.png")
 
 
 if __name__=="__main__":
