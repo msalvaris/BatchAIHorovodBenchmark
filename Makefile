@@ -44,9 +44,9 @@ PROCESSES_PER_NODE:=4
 define generate_job_intel
  python generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi \
  	--filename job.json \
- 	--node_count $(NUM_NODES) \
- 	--model $(MODEL) \
- 	--ppn $(PROCESSES_PER_NODE)
+ 	--node_count $(1) \
+ 	--model $(2) \
+ 	--ppn $(3)
 endef
 
 define generate_job_openmpi
@@ -62,13 +62,17 @@ define generate_job_local
  python generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 local \
  	--filename job.json \
  	--node_count 1 \
- 	--model $(MODEL) \
- 	--ppn $(PROCESSES_PER_NODE)
+ 	--model $(2) \
+ 	--ppn $(3)
 endef
 
 define stream_stdout
 	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) \
 	--j $(1) --output-directory-id stdouterr -f stdout.txt
+endef
+
+define submit_job
+	az batchai job create -n $(1) --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
 endef
 
 
@@ -138,17 +142,18 @@ list-clusters:
 list-nodes:
 	az batchai cluster list-nodes -n ${CLUSTER_NAME} -w $(WORKSPACE) -o table
 
+ 	
 run-bait-intel:
-	$(call generate_job_intel, )
-	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
+	$(call generate_job_intel, $(NUM_NODES), $(MODEL), $(PROCESSES_PER_NODE))
+	$(call submit_job, ${JOB_NAME})
 
 run-bait-openmpi:
-	$(call generate_job_openmpi, )
-	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
+	$(call generate_job_openmpi, $(NUM_NODES), $(MODEL), $(PROCESSES_PER_NODE))
+	$(call submit_job, ${JOB_NAME})
 
 run-bait-local:
-	$(call generate_job_local, )
-	az batchai job create -n ${JOB_NAME} --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
+	$(call generate_job_local, $(MODEL), $(PROCESSES_PER_NODE))
+	$(call submit_job, ${JOB_NAME})
 
 list-jobs:
 	az batchai job list -w $(WORKSPACE) -e $(EXPERIMENT) -o table
@@ -181,26 +186,135 @@ setup: select-subscription create-resource-group create-workspace create-storage
 	@echo "Cluster created"
 
 
+
+
+
+###### Submit Jobs ######
+
+
+submit-jobs:
+
+	# Intel Jobs
+	# 1gpuintel
+	$(call generate_job_intel, 1, $(MODEL), 1)
+	$(call submit_job, 1gpuintel)
+	
+	# 1gpuintel
+	$(call generate_job_intel, 1, $(MODEL), 2)
+	$(call submit_job, 2gpuintel)
+	
+	# 1gpuintel
+	$(call generate_job_intel, 1, $(MODEL), 3)
+	$(call submit_job, 3gpuintel)
+	
+	# 1gpuintel
+	$(call generate_job_intel, 1, $(MODEL), 4)
+	$(call submit_job, 4gpuintel)
+	
+	# 1gpuintel
+	$(call generate_job_intel, 2, $(MODEL), 4)
+	$(call submit_job, 8gpuintel)
+	
+	# 1gpuintel
+	$(call generate_job_intel, 4, $(MODEL), 4)
+	$(call submit_job, 16gpuintel)
+	
+	# 1gpuintel
+	$(call generate_job_intel, 8, $(MODEL), 4)
+	$(call submit_job, 32gpuintel)
+	
+	# OpenMPI Jobs
+	# 1gpuopen
+	$(call generate_job_openmpi, 1, $(MODEL), 1)
+	$(call submit_job, 1gpuopen)
+	
+	# 1gpuopen
+	$(call generate_job_openmpi, 1, $(MODEL), 2)
+	$(call submit_job, 2gpuopen)
+	
+	# 1gpuopen
+	$(call generate_job_openmpi, 1, $(MODEL), 3)
+	$(call submit_job, 3gpuopen)
+	
+	# 1gpuopen
+	$(call generate_job_openmpi, 1, $(MODEL), 4)
+	$(call submit_job, 4gpuopen)
+	
+	# 1gpuopen
+	$(call generate_job_openmpi, 2, $(MODEL), 4)
+	$(call submit_job, 8gpuopen)
+	
+	# 1gpuopen
+	$(call generate_job_openmpi, 4, $(MODEL), 4)
+	$(call submit_job, 16gpuopen)
+	
+	# 1gpuopen
+	$(call generate_job_openmpi, 8, $(MODEL), 4)
+	$(call submit_job, 32gpuopen)
+	
+	# Local
+	# 1gpulocal
+	$(call generate_job_local, $(MODEL), 1)
+	$(call submit_job, 1gpulocal)
+
+
+###### Gather Results ######
+
+results.json: 1gpulocal_v100_local.results 1gpuintel_v100_intel.results 2gpuintel_v100_intel.results 3gpuintel_v100_intel.results \
+4gpuintel_v100_intel.results 8gpuintel_v100_intel.results 16gpuintel_v100_intel.results 32gpuintel_v100_intel.results \
+1gpuopen_v100_open.results 2gpuopen_v100_open.results 3gpuopen_v100_open.results 4gpuopen_v100_open.results 8gpuopen_v100_open.results \
+16gpuopen_v100_open.results 32gpuopen_v100_open.results
+	python parse_results.py
+
 1gpulocal_v100_local.results:
 	$(call stream_stdout, 1gpulocal)>1gpulocal_v100_local.results
 
-#
-#make stream-stdout JOB_NAME=1gpulocal>
-#
-#make stream-stdout JOB_NAME=1gpuintel>1gpuintel_v100_intel.results
-#make stream-stdout JOB_NAME=2gpuintel>2gpuintel_v100_intel.results
-#make stream-stdout JOB_NAME=3gpuintel>3gpuintel_v100_intel.results
-#make stream-stdout JOB_NAME=4gpuintel>4gpuintel_v100_intel.results
-#make stream-stdout JOB_NAME=8gpuintel>8gpuintel_v100_intel.results
-#make stream-stdout JOB_NAME=16gpuintel>16gpuintel_v100_intel.results
-#make stream-stdout JOB_NAME=32gpuintel>32gpuintel_v100_intel.results
-#
-#make stream-stdout JOB_NAME=1gpuopen>1gpuopen_v100_open.results
-#make stream-stdout JOB_NAME=2gpuopen>2gpuopen_v100_open.results
-#make stream-stdout JOB_NAME=3gpuopen>3gpuopen_v100_open.results
-#make stream-stdout JOB_NAME=4gpuopen>4gpuopen_v100_open.results
-#make stream-stdout JOB_NAME=8gpuopen>8gpuopen_v100_open.results
-#make stream-stdout JOB_NAME=16gpuopen>16gpuopen_v100_open.results
-#make stream-stdout JOB_NAME=32gpuopen>32gpuopen_v100_open.results
+
+
+1gpuintel_v100_intel.results:
+	$(call stream_stdout, 1gpuintel)>1gpuintel_v100_intel.results
+
+2gpuintel_v100_intel.results:
+	$(call stream_stdout, 2gpuintel)>2gpuintel_v100_intel.results
+
+3gpuintel_v100_intel.results:
+	$(call stream_stdout, 3gpuintel)>3gpuintel_v100_intel.results
+
+4gpuintel_v100_intel.results:
+	$(call stream_stdout, 4gpuintel)>4gpuintel_v100_intel.results
+
+8gpuintel_v100_intel.results:
+	$(call stream_stdout, 8gpuintel)>8gpuintel_v100_intel.results
+
+16gpuintel_v100_intel.results:
+	$(call stream_stdout, 16gpuintel)>16gpuintel_v100_intel.results
+
+32gpuintel_v100_intel.results:
+	$(call stream_stdout, 32gpuintel)>32gpuintel_v100_intel.results
+
+
+
+1gpuopen_v100_open.results:
+	$(call stream_stdout, 1gpuopen)>1gpuopen_v100_open.results
+
+2gpuopen_v100_open.results:
+	$(call stream_stdout, 2gpuopen)>2gpuopen_v100_open.results
+
+3gpuopen_v100_open.results:
+	$(call stream_stdout, 3gpuopen)>3gpuopen_v100_open.results
+
+4gpuopen_v100_open.results:
+	$(call stream_stdout, 4gpuopen)>4gpuopen_v100_open.results
+
+8gpuopen_v100_open.results:
+	$(call stream_stdout, 8gpuopen)>8gpuopen_v100_open.results
+
+16gpuopen_v100_open.results:
+	$(call stream_stdout, 16gpuopen)>16gpuopen_v100_open.results
+
+32gpuopen_v100_open.results:
+	$(call stream_stdout, 32gpuopen)>32gpuopen_v100_open.results
+
+
 
 .PHONY: help build push
