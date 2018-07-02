@@ -66,6 +66,11 @@ define generate_job_local
  	--ppn $(PROCESSES_PER_NODE)
 endef
 
+define stream_stdout
+	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) \
+	--j $(1) --output-directory-id stdouterr -f stdout.txt
+endef
+
 
 help:
 	echo "$$PROJECT_HELP_MSG" | less
@@ -152,7 +157,8 @@ list-files:
 	az batchai job file list -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr
 
 stream-stdout:
-	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stdout.txt
+	$(call stream_stdout, ${JOB_NAME})
+
 
 stream-stderr:
 	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stderr.txt
@@ -175,5 +181,26 @@ setup: select-subscription create-resource-group create-workspace create-storage
 	@echo "Cluster created"
 
 
+1gpulocal_v100_local.results:
+	$(call stream_stdout, 1gpulocal)
+
+#
+#make stream-stdout JOB_NAME=1gpulocal>
+#
+#make stream-stdout JOB_NAME=1gpuintel>1gpuintel_v100_intel.results
+#make stream-stdout JOB_NAME=2gpuintel>2gpuintel_v100_intel.results
+#make stream-stdout JOB_NAME=3gpuintel>3gpuintel_v100_intel.results
+#make stream-stdout JOB_NAME=4gpuintel>4gpuintel_v100_intel.results
+#make stream-stdout JOB_NAME=8gpuintel>8gpuintel_v100_intel.results
+#make stream-stdout JOB_NAME=16gpuintel>16gpuintel_v100_intel.results
+#make stream-stdout JOB_NAME=32gpuintel>32gpuintel_v100_intel.results
+#
+#make stream-stdout JOB_NAME=1gpuopen>1gpuopen_v100_open.results
+#make stream-stdout JOB_NAME=2gpuopen>2gpuopen_v100_open.results
+#make stream-stdout JOB_NAME=3gpuopen>3gpuopen_v100_open.results
+#make stream-stdout JOB_NAME=4gpuopen>4gpuopen_v100_open.results
+#make stream-stdout JOB_NAME=8gpuopen>8gpuopen_v100_open.results
+#make stream-stdout JOB_NAME=16gpuopen>16gpuopen_v100_open.results
+#make stream-stdout JOB_NAME=32gpuopen>32gpuopen_v100_open.results
 
 .PHONY: help build push
