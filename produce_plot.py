@@ -30,15 +30,15 @@ def main(filename='results.json'):
     res_dict = results['Images/Second'].to_dict()
     factors = list(res_dict.keys())
     source = ColumnDataSource(data=dict(x=factors, counts=list(res_dict.values()), MPI=results['MPI']))
-    p = figure(x_range=FactorRange(*factors), plot_height=400, plot_width=800,
+    p = figure(x_range=FactorRange(*factors), plot_height=500, plot_width=800, output_backend="svg",
                toolbar_location=None, tools="", title="Training throughput for ResNet50 with synthetic data (V100)")
-
+    p.output_backend = "svg"
     p.vbar(x='x', top='counts', width=0.9, source=source, line_color="white", legend='MPI',
                 fill_color=factor_cmap('x', palette=palette, factors=['IntelMPI', 'OpenMPI+NCCL'], start=1, end=4))
 
     p.y_range.start = 0
     p.x_range.range_padding = 0.3
-    p.xaxis.major_label_orientation = 1.2
+    p.xaxis.major_label_orientation = 1.3
     p.xgrid.grid_line_color = None
     p.yaxis.axis_label = 'Images/Second'
     vb2 = p.vbar(x=[-2], top=[350], width=0.9, line_color="white", fill_color=palette[-1])
@@ -47,17 +47,18 @@ def main(filename='results.json'):
     legend = Legend(items=[
         a.items[0],
         LegendItem(label="Single GPU", renderers=[vb2])
-    ], location=(0, 0))
+    ], location=(0, 100))
     p.add_layout(legend, 'right')
-    citation = Label(x=-4.8, y=0,
-                     text='Single GPU', render_mode='css',
+    citation = Label(x=-2, y=500,
+                     text='Single GPU',
                      border_line_color=None,
-                     background_fill_color=None, angle=1.2, text_font_size='12pt',
+                     background_fill_color=None, angle=1.3, text_font_size='12pt',
                      text_color=palette[-1])
 
     p.add_layout(citation)
 
-    p.output_backend = "svg"
+    
+    
     export_svgs(p, filename="plot.svg")
 
 
