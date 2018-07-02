@@ -47,9 +47,9 @@ def main(filename='results.json'):
     legend = Legend(items=[
         a.items[0],
         LegendItem(label="Single GPU", renderers=[vb2])
-    ], location=(0, -30))
+    ], location=(0, -10))
     p.add_layout(legend, 'right')
-    citation = Label(x=-4.8, y=-1300,
+    citation = Label(x=-4.8, y=-1100,
                      text='Single GPU', render_mode='css',
                      border_line_color=None,
                      background_fill_color=None, angle=1.2, text_font_size='12pt',
