@@ -248,14 +248,14 @@ submit-jobs:
 
 ###### Gather Results ######
 
-gather_results:results.json
+gather-results:results.json
 	@echo "All results gathered"
 
 results.json: 1gpulocal_$(GPU_TYPE)_local.results 1gpuintel_$(GPU_TYPE)_intel.results 2gpuintel_$(GPU_TYPE)_intel.results 3gpuintel_$(GPU_TYPE)_intel.results \
 4gpuintel_$(GPU_TYPE)_intel.results 8gpuintel_$(GPU_TYPE)_intel.results 16gpuintel_$(GPU_TYPE)_intel.results 32gpuintel_$(GPU_TYPE)_intel.results \
 1gpuopen_$(GPU_TYPE)_open.results 2gpuopen_$(GPU_TYPE)_open.results 3gpuopen_$(GPU_TYPE)_open.results 4gpuopen_$(GPU_TYPE)_open.results 8gpuopen_$(GPU_TYPE)_open.results \
 16gpuopen_$(GPU_TYPE)_open.results 32gpuopen_$(GPU_TYPE)_open.results
-	python parse_results.py
+	python ../parse_results.py
 
 
 1gpulocal_$(GPU_TYPE)_local.results:
