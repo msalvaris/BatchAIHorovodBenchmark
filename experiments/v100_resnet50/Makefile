@@ -54,9 +54,9 @@ endef
 define generate_job_openmpi
  python ../generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 openmpi \
  	--filename job.json \
- 	--node_count $(NUM_NODES) \
- 	--model $(MODEL) \
- 	--ppn $(PROCESSES_PER_NODE)
+ 	--node_count $(1) \
+ 	--model $(2) \
+ 	--ppn $(3)
 endef
 
 
@@ -64,8 +64,8 @@ define generate_job_local
  python ../generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 local \
  	--filename job.json \
  	--node_count 1 \
- 	--model $(2) \
- 	--ppn $(3)
+ 	--model $(1) \
+ 	--ppn $(2)
 endef
 
 
