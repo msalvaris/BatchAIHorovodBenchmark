@@ -37,7 +37,7 @@ JOB_NAME:=tf_benchmark
 MODEL:=resnet50
 SELECTED_SUBSCRIPTION:="Team Danielle Internal"
 WORKSPACE:=workspace
-EXPERIMENT:=experimentp100
+EXPERIMENT:=experiment
 PROCESSES_PER_NODE:=4
 GPU_TYPE:='v100'
 
