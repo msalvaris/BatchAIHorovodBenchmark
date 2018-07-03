@@ -85,7 +85,7 @@ build:
 	docker build -t $(image_name) Docker
 
 run:
-	docker run -v $(PWD):/workspace -it $(image_name) bash
+	docker run -p 9999:9999 -v $(PWD):/workspace -it $(image_name) bash
 
 push:
 	docker push $(image_name)
