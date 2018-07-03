@@ -2,7 +2,7 @@
 
 
 
-![results](plot.svg "Logo Title Text 1")
+![results](experiments/v100_resnet50/plot.svg "Logo Title Text 1")
 
 
 ##### Commands run

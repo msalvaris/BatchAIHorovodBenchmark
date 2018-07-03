@@ -1,19 +1,17 @@
+import json
+import pandas as pd
+from bokeh.io import export_svgs
 from bokeh.models import ColumnDataSource, FactorRange
+from bokeh.models import Legend
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
-from bokeh.models import Legend, LegendItem
-from bokeh.models import Label
-from bokeh.io import export_svgs, export_png
-import pandas as pd
-import json
-
 
 palette = ["#717cbb", "#89b9df", "#8a4b9a"]
+
 
 def read_json(filename):
     with open(filename) as f:
         return json.load(f)
-
 
 
 def main(filename='results.json'):
