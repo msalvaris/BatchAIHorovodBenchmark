@@ -39,7 +39,7 @@ SELECTED_SUBSCRIPTION:="Team Danielle Internal"
 WORKSPACE:=workspace
 EXPERIMENT:=experimentp40
 PROCESSES_PER_NODE:=4
-GPU_TYPE:='p40'
+GPU_TYPE:=p40
 
 
 define generate_job_intel

@@ -39,7 +39,7 @@ SELECTED_SUBSCRIPTION:="Team Danielle Internal"
 WORKSPACE:=workspace
 EXPERIMENT:=experimentk80
 PROCESSES_PER_NODE:=4
-GPU_TYPE:='k80'
+GPU_TYPE:=k80
 
 
 define generate_job_intel
