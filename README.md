@@ -7,9 +7,10 @@
 ## P100 - ResNet 50
 
 ## P40 - ResNet 50
+![results](experiments/p40_resnet50/plot.svg "ResNet50 on p40s")
 
 ## K80 - ResNet 50
-![results](experiments/k80_resnet50/plot.svg "ResNet50 on V100s")
+![results](experiments/k80_resnet50/plot.svg "ResNet50 on k80s")
 
 ### Gathering results
 
