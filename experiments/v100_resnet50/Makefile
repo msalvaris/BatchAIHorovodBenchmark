@@ -36,12 +36,11 @@ CLUSTER_NAME:=tfbaitbench
 JOB_NAME:=tf_benchmark
 MODEL:=resnet50
 SELECTED_SUBSCRIPTION:="Team Danielle Internal"
-image_name:=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
 WORKSPACE:=workspace
 EXPERIMENT:=experiment
 PROCESSES_PER_NODE:=4
 GPU_TYPE:='v100'
-RESULTS_PATH='results'
+
 
 define generate_job_intel
  python ../generate_job_spec.py masalvar/horovod-batchai-bench-intel:9-1.8-0.13.2 intelmpi \
@@ -50,6 +49,7 @@ define generate_job_intel
  	--model $(2) \
  	--ppn $(3)
 endef
+
 
 define generate_job_openmpi
  python ../generate_job_spec.py masalvar/horovod-batchai-bench:9-1.8-0.13.2 openmpi \
@@ -68,10 +68,12 @@ define generate_job_local
  	--ppn $(3)
 endef
 
+
 define stream_stdout
 	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) \
 	--j $(1) --output-directory-id stdouterr -f stdout.txt
 endef
+
 
 define submit_job
 	az batchai job create -n $(1) --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
