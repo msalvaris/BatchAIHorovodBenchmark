@@ -79,6 +79,9 @@ define submit_job
 	az batchai job create -n $(1) --cluster ${CLUSTER_NAME} -w $(WORKSPACE) -e $(EXPERIMENT) -f job.json
 endef
 
+define delete_job
+	az batchai job delete -w $(WORKSPACE) -e $(EXPERIMENT) --name $(1) -y
+endef
 
 select-subscription:
 	az login -o table
@@ -160,7 +163,7 @@ stream-stderr:
 	az batchai job file stream -w $(WORKSPACE) -e $(EXPERIMENT) --j ${JOB_NAME} --output-directory-id stdouterr -f stderr.txt
 
 delete-job:
-	az batchai job delete -w $(WORKSPACE) -e $(EXPERIMENT) --name ${JOB_NAME} -y
+	$(call delete_job, ${JOB_NAME})
 
 delete-cluster:
 	az configure --defaults group=''
@@ -178,7 +181,6 @@ setup: select-subscription create-resource-group create-workspace create-storage
 
 
 ###### Submit Jobs ######
-
 
 submit-jobs:
 
@@ -245,7 +247,26 @@ submit-jobs:
 	$(call generate_job_local, $(MODEL), 1)
 	$(call submit_job, 1gpulocal)
 
+clean-jobs:
+	$(call delete_job, 1gpuintel)
+	$(call delete_job, 2gpuintel)
+	$(call delete_job, 3gpuintel)
+	$(call delete_job, 4gpuintel)
+	$(call delete_job, 8gpuintel)
+	$(call delete_job, 16gpuintel)
+	$(call delete_job, 32gpuintel)
+	
+	$(call delete_job, 1gpuopen)
+	$(call delete_job, 2gpuopen)
+	$(call delete_job, 3gpuopen)
+	$(call delete_job, 4gpuopen)
+	$(call delete_job, 8gpuopen)
+	$(call delete_job, 16gpuopen)
+	$(call delete_job, 32gpuopen)
 
+	$(call delete_job, 1gpulocal)
+
+	
 ###### Gather Results ######
 
 gather-results:results.json
@@ -307,6 +328,11 @@ results.json: 1gpulocal_$(GPU_TYPE)_local.results 1gpuintel_$(GPU_TYPE)_intel.re
 32gpuopen_$(GPU_TYPE)_open.results:
 	$(call stream_stdout, 32gpuopen)>32gpuopen_$(GPU_TYPE)_open.results
 
+clean-results:
+	rm results.json
+	rm *.results
 
+make plot: results.json
+	python ../produce_plot.py
 
 .PHONY: help build push
