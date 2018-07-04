@@ -52,7 +52,7 @@ def main(filename='results.json'):
     source, factors = to_columnsource_and_factors(df)
 
     p = figure(x_range=FactorRange(*factors), plot_height=800, plot_width=1600, output_backend="svg",
-               toolbar_location=None, tools="", title="Training throughput for ResNet50 with synthetic data (V100)".format(df['GPU Type'].iat[0]))
+               toolbar_location=None, tools="", title="Training throughput for ResNet50 with synthetic data ({})".format(df['GPU Type'].iat[0]))
     p.vbar(x='x', top='counts', width=0.9, source=source, line_color="white", legend='MPI',
            fill_color=factor_cmap('x', palette=_PALETTE, factors=['IntelMPI', 'OpenMPI+NCCL', 'Single GPU'], start=1, end=3))
 
