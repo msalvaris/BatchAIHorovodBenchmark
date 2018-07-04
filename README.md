@@ -1,4 +1,4 @@
-# BatchAIHorovodBenchmark
+# Batch AI Horovod Benchmark
 
 
 ## V100 - ResNet 50
