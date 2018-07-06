@@ -16,7 +16,7 @@ MODEL:=mobilenet
 SELECTED_SUBSCRIPTION:="Team Danielle Internal"
 WORKSPACE:=workspace
 GPU_TYPE:=v100
-EXPERIMENT:=experiment_${GPU}_${MODEL}
+EXPERIMENT:=experiment_${GPU_TYPE}_${MODEL}
 PROCESSES_PER_NODE:=4
 
 
