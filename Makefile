@@ -6,10 +6,9 @@ Usage:
     make run					 run benchmarking container
 endef
 export PROJECT_HELP_MSG
+PWD:=$(shell pwd)
 
-
-image_name:=masalvar/batchai-tf-benchmark:9-1.8-0.13.2 # CUDA - Tensorflow - Horovod
-
+image_name:=masalvar/batchai-tf-benchmark-control
 
 help:
 	echo "$$PROJECT_HELP_MSG" | less
@@ -18,7 +17,7 @@ build:
 	docker build -t $(image_name) Docker
 
 run:
-	docker run -p 9999:9999 -v $(PWD):/workspace -it $(image_name) bash
+	docker run -v $(PWD):/workspace -it $(image_name) bash
 
 push:
 	docker push $(image_name)
