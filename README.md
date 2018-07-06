@@ -32,10 +32,10 @@
 
 ## Mobilenet V2
 ### V100 - Mobilenet
-![results](experiments/v100_mobilenet/plot.svg "Mobilenet on V100s")
+![results](experiments/v100_mobilenetv2/plot.svg "Mobilenet on V100s")
 
 ### P100 - Mobilenet
-![results](experiments/p100_mobilenet/plot.svg "Mobilenet on p100s")
+![results](experiments/p100_mobilenetv2/plot.svg "Mobilenet on p100s")
 
 
 ## ResNet 50 v2
