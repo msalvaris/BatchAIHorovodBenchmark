@@ -12,11 +12,12 @@ VM_SIZE:=Standard_NC24rs_v3
 NUM_NODES:=8
 CLUSTER_NAME:=tfbaitbench
 JOB_NAME:=tf_benchmark
-MODEL:=mobilenetv2
+MODEL:=mobilenet
 SELECTED_SUBSCRIPTION:="Team Danielle Internal"
 WORKSPACE:=workspace
-EXPERIMENT:=experiment
-PROCESSES_PER_NODE:=4
 GPU_TYPE:=v100
+EXPERIMENT:=experiment_${GPU}_${MODEL}
+PROCESSES_PER_NODE:=4
+
 
 include ../include/*.mk
