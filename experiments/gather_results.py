@@ -1,9 +1,14 @@
 import json
+import logging
 from glob import iglob
 from itertools import chain
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def read_json(filename):
+    logger.info('Reading {}...'.format(filename))
     with open(filename) as f:
         return json.load(f)
 
