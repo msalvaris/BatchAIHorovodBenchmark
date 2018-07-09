@@ -24,6 +24,9 @@
 ### P40 - ResNet 101
 ![results](experiments/p40_resnet101/plot.svg "ResNet 101 on p40s")
 
+### K80 - ResNet 101
+![results](experiments/k80_resnet101/plot.svg "ResNet 101 on k80s")
+
 
 ## ResNet 152
 ### V100 - ResNet 152
@@ -46,6 +49,9 @@
 ### P40 - Mobilenet
 ![results](experiments/p40_mobilenetv2/plot.svg "Mobilenet on p40s")
 
+### K80 - Mobilenet
+![results](experiments/k80_mobilenetv2/plot.svg "Mobilenet on k80s")
+
 
 ## ResNet 50 v2
 ### V100 - ResNet 50 V2
@@ -56,6 +62,9 @@
 
 ### P40 - ResNet 50 V2
 ![results](experiments/p40_resnet50_v2/plot.svg "ResNet 50 v2 on p40s")
+
+### K80 - ResNet 50 V2
+![results](experiments/k80_resnet50_v2/plot.svg "ResNet 50 v2 on k80s")
 
 
 ## ResNet 101 v2
@@ -68,6 +77,8 @@
 ### P40 - ResNet 101 V2
 ![results](experiments/p40_resnet101_v2/plot.svg "ResNet 101 on p40s")
 
+### K80 - ResNet 101 V2
+![results](experiments/k80_resnet101_v2/plot.svg "ResNet 101 on k80s")
 
 ### Gathering results
 
