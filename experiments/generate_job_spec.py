@@ -16,7 +16,7 @@ mpirun -n {total_processes} -ppn {processes_per_node} {hosts}
 -env I_MPI_DYNAMIC_CONNECTION=0 
 -env I_MPI_DEBUG=6 
 -env I_MPI_HYDRA_DEBUG=on 
-python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 256 --variable_update horovod""".replace('\n', '')
+python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 256 --use_fp16=True --variable_update horovod""".replace('\n', '')
 
 # Config for OpenMPI
 cmd_for_openmpi =  \
