@@ -31,10 +31,10 @@ mpirun -np {total_processes}
 -x NCCL_IB_DISABLE=1 
 --allow-run-as-root 
 {hosts} 
-python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 256 --variable_update horovod""".replace('\n', '')
+python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 256 --use_fp16=True --variable_update horovod""".replace('\n', '')
 
 # Running on single node without mpi
-cmd_local="""python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 64""".replace('\n', '')
+cmd_local="""python /benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model {model} --batch_size 256 --use_fp16=True""".replace('\n', '')
 
 cmd_choice_dict={
     'openmpi':cmd_for_openmpi,
