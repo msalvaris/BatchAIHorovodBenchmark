@@ -87,6 +87,6 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
 # Download benchmarks
 RUN git clone https://github.com/tensorflow/benchmarks && \
 	cd benchmarks && \
-	git checkout 16897fecaa24614796af94762c8b7f77cef20941
+	git checkout 091ef1e4d8832e14d1f874e66bff78a2522d0947
 
 WORKDIR "/benchmarks"
