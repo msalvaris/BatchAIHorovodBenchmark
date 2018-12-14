@@ -87,6 +87,6 @@ RUN echo NCCL_DEBUG=INFO >> /etc/nccl.conf && \
 # Download benchmarks
 RUN git clone https://github.com/tensorflow/benchmarks && \
 	cd benchmarks && \
-	git checkout 3b90c14fb2bf02ca5d27c188aee878663229a0a7
+	git checkout 16897fecaa24614796af94762c8b7f77cef20941
 
 WORKDIR "/benchmarks"
