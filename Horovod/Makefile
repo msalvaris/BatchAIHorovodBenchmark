@@ -21,7 +21,7 @@ define execute_mpi
  			   -map-by slot -x NCCL_DEBUG=INFO \
  			   -x LD_LIBRARY_PATH -x PATH \
  			    -mca pml ob1 -mca btl ^openib \
- 			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --variable_update horovod"
+ 			   python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --use_fp16 --batch_size 256 --variable_update horovod"
 endef
 
 define execute
