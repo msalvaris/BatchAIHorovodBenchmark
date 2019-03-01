@@ -34,7 +34,7 @@ endef
 define execute_parameter
  nvidia-docker run -it \
  --privileged \
- $(1) bash -c "python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --num_gpus=8 --num_batches=1000 "
+ $(1) bash -c "python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --num_gpus=8 --num_batches=1000 --network_topology=gcp_v100 --datasets_parallel_interleave_cycle_length=20 --datasets_parallel_interleave_cycle_length=20 --datasets_sloppy_parallel_interleave --datasets_parallel_interleave_cycle_length=20  --summary_verbosity=1"
 endef
 
 help:
