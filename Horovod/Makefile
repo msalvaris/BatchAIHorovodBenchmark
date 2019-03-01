@@ -9,7 +9,7 @@ endef
 export PROJECT_HELP_MSG
 
 
-numproc:=2 # Number of precesses/GPUs
+numproc:=8 # Number of precesses/GPUs
 name_prefix:=masalvar
 tag:=9-1.8-0.13.2 # Cuda - TF version - Horovod version
 model:=resnet50
