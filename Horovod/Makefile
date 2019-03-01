@@ -30,6 +30,13 @@ define execute
  $(1) bash -c "python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64"
 endef
 
+
+define execute_parameter
+ nvidia-docker run -it \
+ --privileged \
+ $(1) bash -c "python scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model $(model) --batch_size 64 --num_gpus=8 --num_batches=1000 "
+endef
+
 help:
 	echo "$$PROJECT_HELP_MSG" | less
 
@@ -38,6 +45,9 @@ build:
 
 run-mpi:
 	$(call execute_mpi, $(name_prefix)/horovod-batchai-bench:$(tag))
+
+run-parameter:
+	$(call execute_parameter, $(name_prefix)/horovod-batchai-bench:$(tag))
 
 run:
 	$(call execute, $(name_prefix)/horovod-batchai-bench:$(tag))
